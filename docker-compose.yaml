@@ -1,0 +1,54 @@
+version: '3'
+services:
+  app:
+    container_name: alta-go-bmt
+    build: .
+    environment:
+      - FPDB_Username=${FPDB_Username}
+      - FPDB_Password=${FPDB_Password}
+      - FPDB_Host=${FPDB_Host}
+      - FPDB_Port=${FPDB_Port}
+      - FPDB_Name=${FPDB_Name}
+      - FPAPP_PORT=${FPAPP_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET_ADMIN=${JWT_SECRET_ADMIN}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - CLOUDINARY_UPLOAD_FOLDER=${CLOUDINARY_UPLOAD_FOLDER}
+    ports: 
+      - 8088:8088 
+    restart: on-failure
+    # volumes:
+    #   - app_go:/usr/src/app/
+    depends_on:
+      - go-mysql          
+    networks:
+      - go-bmt
+
+
+  go-mysql:
+    image: mysql:5.7
+    container_name: go_db_mysql
+    ports: 
+      - 3306
+    environment: 
+      - MYSQL_ROOT_HOST=${FPDB_Host} 
+      - MYSQL_USER=${FPDB_Username}
+      - MYSQL_PASSWORD=${FPDB_Password}
+      - MYSQL_DATABASE=${FPDB_Name}
+      - MYSQL_ROOT_PASSWORD=${FPDB_Password}
+    volumes:
+      # - db_mysql:/var/lib/mysql
+      - './initdb:/docker-entrypoint-initdb.d'
+    networks:
+      - go-bmt
+
+volumes:
+  # app_go:
+  db_mysql:                  
+
+# Networks to be created to facilitate communication between containers
+networks:
+  go-bmt:
+    driver: bridge
