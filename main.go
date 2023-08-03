@@ -8,6 +8,8 @@ import (
 	"github.com/dedit-hs/go_final-project_bmt-be/routes"
 )
 
+// HELLO
+
 func init() {
 	configs.LoadEnv()
 	configs.InitDB()
