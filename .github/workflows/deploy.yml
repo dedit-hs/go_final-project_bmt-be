@@ -14,8 +14,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          which go        
           cd app
           git pull origin main
-          go test -v ./...
+          go test -v ./..
           docker-compose down && docker-compose up --build -d
